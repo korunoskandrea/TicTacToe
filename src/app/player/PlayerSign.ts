@@ -1,4 +1,4 @@
 export enum PlayerSign {
   O = "O",
-  X = "X"
+  X = "X",
 }

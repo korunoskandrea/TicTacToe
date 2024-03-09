@@ -1,0 +1,25 @@
+.board {
+  border-radius: 10px;
+  background: whitesmoke;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: 50%;
+}
+
+.border-right {
+  border-right: 3px solid black;
+}
+
+.border-bottom {
+  border-bottom: 3px solid black;
+}
+
+h2{
+  text-align: center;
+}
+
