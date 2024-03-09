@@ -2,13 +2,15 @@
   <h2>Current player sign: {{ currPlayer }} </h2>
 </div>
 <div class="board mat-elevation-z8">
-  <app-square
+  <app-board-square
     [ngClass]="{
       'border-right': getCoordinatesFromIndex(i).y < (HEIGHT - 1),
       'border-bottom': getCoordinatesFromIndex(i).x < (WIDTH - 1),
     }"
     [value]="sign"
-    *ngFor="let sign of board; let i = index" (click)="onSquareClicked(i)">
-  </app-square>
+    [isWinningPosition]="isWinningPosition(i)"
+    *ngFor="let sign of board; let i = index" (click)="onSquareClicked(i)"
+  >
+  </app-board-square>
 </div>
 

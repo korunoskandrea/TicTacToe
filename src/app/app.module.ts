@@ -4,17 +4,22 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import {SquareComponent} from "./square/square.component";
+import {BoardSquareComponent} from "./board/board-square/board-square.component";
 import {BoardComponent} from "./board/board.component";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardContent} from "@angular/material/card";
+import {GameOverDialog} from "./dialogs/game-over/game-over.dialog";
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {ChoosePlayerComponent} from "./player/choose-player/choose-player.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    SquareComponent,
-    BoardComponent
+    BoardSquareComponent,
+    BoardComponent,
+    GameOverDialog,
+    ChoosePlayerComponent,
   ],
   imports: [
     BrowserModule,
@@ -23,7 +28,11 @@ import {MatCard, MatCardContent} from "@angular/material/card";
     MatButtonToggleGroup,
     MatButton,
     MatCard,
-    MatCardContent
+    MatCardContent,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogTitle
   ],
   providers: [
     provideAnimationsAsync()

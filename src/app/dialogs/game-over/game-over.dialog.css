@@ -1,0 +1,7 @@
+.container {
+  background: white;
+}
+
+mat-dialog-content, h2 {
+  color: black !important;
+}

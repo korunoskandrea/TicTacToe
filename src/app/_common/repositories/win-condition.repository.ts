@@ -4,71 +4,81 @@ export abstract class WinConditionRepository {
   static readonly WIDTH: number = 3;
   static readonly HEIGHT: number = 3;
 
-  public static isGameOver(board: (PlayerSign | null)[]): boolean {
-    return this._checkDiagonals(board) || this._checkRows(board) || this._checkColumns(board);
+  public static winningPositions(board: (PlayerSign | null)[]): number[] {
+    let result: number[];
+    if (this._checkColumns(board).length !== 0) {
+      result = this._checkColumns(board);
+    } else if (this._checkRows(board).length !== 0) {
+      result = this._checkRows(board);
+    } else {
+      result = this._checkDiagonals(board);
+    }
+    return result;
   }
 
-  private static _checkColumns(board: (PlayerSign | null)[]): boolean {
-    let counter: number = 0;
+  private static _checkColumns(board: (PlayerSign | null)[]): number[] {
+    let winningColumn: number[] = [] ;
     for (let i = 0; i < board.length; i += this.WIDTH) {
       if (board[i] === null) { // empty cell
-        counter = 0;
-      } else if (counter === 0) { // first not empty cell
-        counter++;
+        winningColumn = [];
+      } else if (winningColumn.length === 0) { // first not empty cell
+        winningColumn.push(i);
       } else if (board[i] === board[i - this.WIDTH]) { // 2 cells have the same symbol
-        counter++;
+        winningColumn.push(i);
       }
-      if (counter === 3) { // 3 cells have the same symbol
-        return true;
+      if (winningColumn.length === 3) { // 3 cells have the same symbol
+        return winningColumn;
       }
       if (i === 6 || i == 7) {
         i = ((i % this.HEIGHT) + 1) - 3; // jump to a new column
-        counter = 0;
+        winningColumn = [];
       }
     }
-    return false;
+    return [];
   }
 
-  private static _checkRows(board: (PlayerSign | null)[]): boolean {
-    let counter: number = 0;
+  private static _checkRows(board: (PlayerSign | null)[]): number[] {
+    let winningRow: number[] = [] ;
     for (let i: number = 0; i < board.length; i++) {
       if (i % this.WIDTH === 0) { // new line
-        counter = 0;
+        winningRow = [];
       }
       if (board[i] === null) { // empty cell
-        counter = 0;
-      } else if (counter === 0) { // first not empty cell
-        counter++;
+        winningRow = [];
+      } else if (winningRow.length === 0) { // first not empty cell
+        winningRow.push(i);
       } else if (board[i] === board[i - 1]) { // 2 cells have the same symbol
-        counter++;
+        winningRow.push(i);
       }
-      if (counter === 3) { // 3 cells have the same symbol
-        return true;
+      if (winningRow.length === 3) { // 3 cells have the same symbol
+        return winningRow;
       }
     }
-    return false;
+    return [];
   }
 
-  private static _checkLeftDiagonal(board: (PlayerSign | null)[]) {
+  private static _checkLeftDiagonal(board: (PlayerSign | null)[]): number[] {
     const INCREMENT: number = this.WIDTH + 1; // 4
+    let winningDiagonal: number[] = [0,4,8] ;
     for (let i: number = INCREMENT; i < board.length; i += INCREMENT) {
       if (board[i - INCREMENT] !== board[i] || board[i] === null) {
-        return false;
+        return [];
       }
     }
-    return true;
+    return winningDiagonal;
   }
 
-  private static _checkRightDiagonal(board: (PlayerSign | null)[]) {
+  private static _checkRightDiagonal(board: (PlayerSign | null)[]): number[] {
     const INCREMENT: number = this.WIDTH - 1; // 2
+    let winningDiagonal: number[] = [2,4,6] ;
     for (let i: number = INCREMENT * 2; i < board.length - 1; i += INCREMENT) {
       if (board[i - INCREMENT] !== board[i] || board[i] === null) {
-        return false;
+        return [];
       }
     }
-    return true;
+    return winningDiagonal;
   }
-  private static _checkDiagonals(board: (PlayerSign | null)[]): boolean {
+  private static _checkDiagonals(board: (PlayerSign | null)[]): number[] {
     return this._checkLeftDiagonal(board) || this._checkRightDiagonal(board);
   }
 }

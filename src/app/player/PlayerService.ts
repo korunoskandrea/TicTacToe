@@ -15,6 +15,11 @@ export class PlayerService{
     return this._currentPlayerChangeNotifier.asObservable();
   }
 
+  setCurrentPlayer(player: PlayerSign) {
+    this._currentPlayer = player;
+    this._currentPlayerChangeNotifier.next(this._currentPlayer);
+  }
+
   nextPlayer(): void {
     if (this._currentPlayer === PlayerSign.X) {
       this._currentPlayer = PlayerSign.O;

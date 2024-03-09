@@ -1,7 +1,9 @@
-import {Component} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
 import {PlayerSign} from "../player/PlayerSign";
 import {PlayerService} from "../player/PlayerService";
 import {WinConditionRepository} from "../_common/repositories/win-condition.repository";
+import {GameOverDialog} from "../dialogs/game-over/game-over.dialog";
+import {MatDialog} from "@angular/material/dialog";
 
 
 @Component({
@@ -13,12 +15,10 @@ import {WinConditionRepository} from "../_common/repositories/win-condition.repo
 export class BoardComponent {
   readonly WIDTH: number = 3;
   readonly HEIGHT: number = 3;
-
-  constructor(private _playerService: PlayerService) {
-  }
-
-
   board: (PlayerSign | null)[] = Array(this.WIDTH * this.HEIGHT).fill(null);
+  gameOver: boolean = false; // need this for the game over dialog
+  constructor(private _playerService: PlayerService, private _dialog: MatDialog) {
+  }
 
   getCoordinatesFromIndex(index: number): { x: number; y: number } {
     // y = i mod w
@@ -30,11 +30,13 @@ export class BoardComponent {
   }
 
   onSquareClicked(index: number): void {
-    if (WinConditionRepository.isGameOver(this.board) || this.board[index] !== null) return;
+    if (this.winningPositions
+      .length !== 0 || this.board[index] !== null) return;
     this.board[index] = this._playerService.currentPlayer;
     this._playerService.nextPlayer();
-    console.log(WinConditionRepository.isGameOver(this.board));
-    console.log(this.winner);
+    if (this.winner) {
+      this.openGameOverDialog('100ms', '150ms');
+    }
   }
 
   get currPlayer(): PlayerSign {
@@ -42,7 +44,8 @@ export class BoardComponent {
   }
 
   get winner(): PlayerSign | null {
-    if(WinConditionRepository.isGameOver(this.board)){
+    if(this.winningPositions.length !== 0){
+      this.gameOver = true;
       if(this._playerService.currentPlayer === PlayerSign.X) {
         return PlayerSign.O;
       } else {
@@ -53,4 +56,20 @@ export class BoardComponent {
     }
   }
 
+  openGameOverDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    const dialogRef = this._dialog.open(GameOverDialog, {
+      width: '300px',
+      data: this.winner,
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
+
+  get winningPositions(): number[] {
+    return WinConditionRepository.winningPositions(this.board);
+  }
+
+  isWinningPosition(index: number): boolean {
+    return this.winningPositions.includes(index);
+  }
 }
