@@ -1,5 +1,5 @@
 import {Component, Input} from "@angular/core";
-import {PlayerSign} from "../../player/PlayerSign";
+import {PlayerSign} from "../../player/utils/PlayerSign";
 
 @Component({
   selector: 'app-board-square',

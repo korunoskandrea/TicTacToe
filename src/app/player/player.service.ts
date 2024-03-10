@@ -1,13 +1,13 @@
-import {PlayerSign} from "./PlayerSign";
+import {PlayerSign} from "./utils/PlayerSign";
 import {Observable, Subject} from "rxjs";
 import {Injectable} from "@angular/core";
 
 @Injectable({ providedIn: "root" })
 export class PlayerService{
-  private _currentPlayer: PlayerSign = PlayerSign.O;
+  private _currentPlayer: PlayerSign | null = null;
   private _currentPlayerChangeNotifier: Subject<PlayerSign> = new Subject<PlayerSign>();
 
-  get currentPlayer(): PlayerSign {
+  get currentPlayer(): PlayerSign | null {
     return this._currentPlayer;
   }
 

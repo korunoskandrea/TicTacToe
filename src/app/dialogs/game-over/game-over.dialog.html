@@ -1,9 +1,12 @@
-
 <div class="container">
   <h2 mat-dialog-title>Game Over</h2>
   <mat-dialog-content>
-    Winner: {{ winner }}
+    <h3 *ngIf="data.winner !== null">Winner</h3>
+    <h3 *ngIf="data.winner === null">Tied</h3>
+    <h3>Time</h3>
+    <p >{{ data.winner }}</p>
+    <p>{{ data.timer }}</p>
   </mat-dialog-content>
+  <button mat-button class="start-new-game-btn" (click)="onNewGameClicked()">New game</button>
+  <button mat-button class="see-result-btn" (click)="OnSeeResultCliked()">New game</button>
 </div>
-
-

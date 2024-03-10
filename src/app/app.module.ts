@@ -7,11 +7,13 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import {BoardSquareComponent} from "./board/board-square/board-square.component";
 import {BoardComponent} from "./board/board.component";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatFabButton} from "@angular/material/button";
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {GameOverDialog} from "./dialogs/game-over/game-over.dialog";
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {ChoosePlayerComponent} from "./player/choose-player/choose-player.component";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatDivider} from "@angular/material/divider";
 
 @NgModule({
   declarations: [
@@ -32,7 +34,11 @@ import {ChoosePlayerComponent} from "./player/choose-player/choose-player.compon
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-    MatDialogTitle
+    MatDialogTitle,
+    MatFabButton,
+    MatGridList,
+    MatGridTile,
+    MatDivider
   ],
   providers: [
     provideAnimationsAsync()

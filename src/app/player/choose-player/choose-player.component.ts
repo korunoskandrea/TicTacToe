@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
-import {PlayerSign} from "../PlayerSign";
+import {PlayerSign} from "../utils/PlayerSign";
 import {Router} from "@angular/router";
-import {PlayerService} from "../PlayerService";
+import {PlayerService} from "../player.service";
 
 @Component({
   selector: 'app-choose-player',

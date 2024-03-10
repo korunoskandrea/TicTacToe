@@ -1,8 +1,13 @@
-import {PlayerSign} from "../../player/PlayerSign";
+import {PlayerSign} from "../../player/utils/PlayerSign";
 
 export abstract class WinConditionRepository {
   static readonly WIDTH: number = 3;
   static readonly HEIGHT: number = 3;
+
+  public static isTied(board: (PlayerSign | null)[]): boolean {
+    if (this.winningPositions(board).length !== 0) return false;
+    return board.findIndex(value => value === null) < 0;
+  }
 
   public static winningPositions(board: (PlayerSign | null)[]): number[] {
     let result: number[];
@@ -79,6 +84,11 @@ export abstract class WinConditionRepository {
     return winningDiagonal;
   }
   private static _checkDiagonals(board: (PlayerSign | null)[]): number[] {
-    return this._checkLeftDiagonal(board) || this._checkRightDiagonal(board);
+    const leftDiagonal = this._checkLeftDiagonal(board);
+    const rightDiagonal = this._checkRightDiagonal(board);
+    if (leftDiagonal.length !== 0) {
+      return leftDiagonal;
+    }
+    return rightDiagonal;
   }
 }
