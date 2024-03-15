@@ -20,6 +20,10 @@ button {
   color: #ededed;
 }
 
+.diff {
+  font-size: 15px;
+}
+
 button:hover {
   background-color: #ededed;
   color: #124d54;
@@ -28,6 +32,7 @@ button:hover {
 
 .button-container {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .button-container button {

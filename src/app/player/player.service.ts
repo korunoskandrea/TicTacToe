@@ -1,31 +1,34 @@
-import {PlayerSign} from "./utils/PlayerSign";
-import {Observable, Subject} from "rxjs";
-import {Injectable} from "@angular/core";
+import { PlayerSign } from './utils/PlayerSign';
+import { Injectable } from '@angular/core';
+import { Player, PlayerType } from './results/Player';
 
-@Injectable({ providedIn: "root" })
-export class PlayerService{
-  private _currentPlayer: PlayerSign | null = null;
-  private _currentPlayerChangeNotifier: Subject<PlayerSign> = new Subject<PlayerSign>();
+@Injectable({ providedIn: 'root' })
+export class PlayerService {
+  // Responsible for the user
+  private _humanPlayer: Player | null = null;
+  private _computerPlayer: Player | null = null;
+  private _isHuman: boolean = true;
 
-  get currentPlayer(): PlayerSign | null {
-    return this._currentPlayer;
+  get currentPlayer(): Player | null {
+    if (this._isHuman) return this._humanPlayer;
+    return this._computerPlayer;
   }
 
-  get currentPlayerObserver(): Observable<PlayerSign> {
-    return this._currentPlayerChangeNotifier.asObservable();
-  }
-
-  setCurrentPlayer(player: PlayerSign) {
-    this._currentPlayer = player;
-    this._currentPlayerChangeNotifier.next(this._currentPlayer);
+  setHumanPlayer(player: PlayerSign) {
+    this._humanPlayer = new Player(player, PlayerType.HUMAN);
+    this._computerPlayer = new Player(
+      this._humanPlayer.oppositeSign,
+      PlayerType.COMPUTER,
+    );
   }
 
   nextPlayer(): void {
-    if (this._currentPlayer === PlayerSign.X) {
-      this._currentPlayer = PlayerSign.O;
-    } else {
-      this._currentPlayer = PlayerSign.X;
-    }
-    this._currentPlayerChangeNotifier.next(this._currentPlayer);
+    this._isHuman = !this._isHuman;
+  }
+
+  switchSignsForNewGame() {
+    this._humanPlayer?.switchSign();
+    this._computerPlayer?.switchSign();
+    this._isHuman = true;
   }
 }

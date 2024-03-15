@@ -1,107 +1,113 @@
-import {Component, inject, ViewChild} from "@angular/core";
-import {PlayerSign} from "../player/utils/PlayerSign";
-import {PlayerService} from "../player/player.service";
-import {WinConditionRepository} from "../_common/repositories/win-condition.repository";
-import {GameOverDialog} from "../dialogs/game-over/game-over.dialog";
-import {MatDialog} from "@angular/material/dialog";
-import {Router} from "@angular/router";
-
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { PlayerSign } from '../player/utils/PlayerSign';
+import { PlayerService } from '../player/player.service';
+import { GameOverDialog } from '../dialogs/game-over/game-over.dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { GameResultType, Player } from '../player/results/Player';
+import { BoardService } from './board.service';
+import { Subscription } from 'rxjs';
+import { ResultsService } from '../player/results/results.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-board',
   templateUrl: 'board.component.html',
   styleUrl: 'board.component.css',
 })
-
-export class BoardComponent {
+export class BoardComponent implements OnInit, OnDestroy {
   readonly WIDTH: number = 3;
   readonly HEIGHT: number = 3;
-  board: (PlayerSign | null)[] = Array(this.WIDTH * this.HEIGHT).fill(null);
-  gameOver: boolean = false; // need this for the game over dialog
-  timer: number = 0; // Timer property
-  timerInterval: any; // Interval variable
-  constructor(private _playerService: PlayerService, private _dialog: MatDialog,private _router:Router) {
-    this.startTimer(); // Start the timer when the game starts
+  private _boardSubscription?: Subscription;
+  player!: Player;
+  board: (PlayerSign | null)[] = [];
+
+  constructor(
+    private _boardService: BoardService,
+    private _playerService: PlayerService,
+    private _resultService: ResultsService,
+    private _dialog: MatDialog,
+    private _router: Router,
+  ) {}
+
+  ngOnInit(): void {
+    this.board = this._boardService.board;
+    this._boardSubscription = this._boardService.boardObservable.subscribe(
+      (board) => (this.board = board),
+    );
+    this._boardService.startTimer();
   }
 
-  startTimer() {
-    this.timerInterval = setInterval(() => {
-      this.timer++;
-    }, 1000); // Increment timer every second
+  ngOnDestroy() {
+    this._boardSubscription?.unsubscribe();
   }
 
-  // Function to stop the timer
-  stopTimer() {
-    clearInterval(this.timerInterval);
-  }
-  getCoordinatesFromIndex(index: number): { x: number; y: number } {
-    // y = i mod w
-    // x = (i - y) / W
-    const y: number = index % this.WIDTH;
-    const x: number = (index - y) / this.WIDTH;
-
-    return {x, y};
+  getCoordinates(index: number): { x: number; y: number } {
+    return this._boardService.getCoordinatesFromIndex(index);
   }
 
   onSquareClicked(index: number): void {
-    if (this.winningPositions.length !== 0 || this.board[index] !== null) return;
-    this.board[index] = this._playerService.currentPlayer;
-    this._playerService.nextPlayer();
-    if (this.winner) {
-      this.stopTimer(); // Stop the timer when the game is over
-      console.log(this.timer);
-      this.openGameOverDialog('100ms', '150ms');
-    }
+    this._boardService.onSquareSelected(index, () =>
+      this.openGameOverDialog('100ms', '100ms'),
+    );
   }
 
   get currPlayer(): PlayerSign | null {
-    return this._playerService.currentPlayer;
+    return this._playerService.currentPlayer!.sign;
   }
 
-  get winner(): PlayerSign | null {
-    if(this.winningPositions.length !== 0 || WinConditionRepository.isTied(this.board)){
-      this.gameOver = true;
-      if(this._playerService.currentPlayer === PlayerSign.X) {
-        return PlayerSign.O;
-      } else {
-        return  PlayerSign.X;
-      }
-    } else{
-      return null;
-    }
+  get time(): number {
+    return this._boardService.time;
   }
 
-  openGameOverDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    if(this.winningPositions.length!==0){
+  openGameOverDialog(
+    enterAnimationDuration: string,
+    exitAnimationDuration: string,
+  ): void {
+    if (this._boardService.winner !== null) {
+      this._resultService.addResult({
+        resultType: GameResultType.WIN,
+        sign: this._boardService.winner,
+        playerType: this._playerService.currentPlayer!.type,
+      });
       const dialogRef = this._dialog.open(GameOverDialog, {
         width: '500px',
         data: {
-          winner: this.winner,
-          timer: this.timer
+          winner: this._boardService.winner,
+          timer: this._boardService.time,
         },
+        disableClose: true,
         enterAnimationDuration,
         exitAnimationDuration,
       });
-    } else if (WinConditionRepository.isTied(this.board)){
+    } else if (this._boardService.isTied) {
+      this._resultService.addResult({
+        resultType: GameResultType.TIE,
+        sign: null,
+        playerType: this._playerService.currentPlayer!.type,
+      });
       const dialogRef = this._dialog.open(GameOverDialog, {
         width: '500px',
         data: {
           winner: null,
-          timer: this.timer
+          timer: this._boardService.time,
         },
+        disableClose: true,
         enterAnimationDuration,
         exitAnimationDuration,
       });
     }
   }
 
-  get winningPositions(): number[] {
-    return WinConditionRepository.winningPositions(this.board);
-  }
-
   isWinningPosition(index: number): boolean {
-    return this.winningPositions.includes(index);
+    return this._boardService.winningPositions.includes(index);
   }
 
+  onChooseSignClicked() {
+    this._boardService.resetBoard();
+    return this._router.navigate(['choose-player']);
+  }
 
+  onSeeResultsClicked() {
+    return this._router.navigate(['results']);
+  }
 }

@@ -18,8 +18,11 @@ mat-dialog-content{
   grid-row-gap: 10px;
 }
 
-.start-new-game-btn {
-  margin: auto;
+.btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: center;
+  grid-row-gap: 10px;
 }
 
 p, h3 {

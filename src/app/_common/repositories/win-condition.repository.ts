@@ -4,11 +4,6 @@ export abstract class WinConditionRepository {
   static readonly WIDTH: number = 3;
   static readonly HEIGHT: number = 3;
 
-  public static isTied(board: (PlayerSign | null)[]): boolean {
-    if (this.winningPositions(board).length !== 0) return false;
-    return board.findIndex(value => value === null) < 0;
-  }
-
   public static winningPositions(board: (PlayerSign | null)[]): number[] {
     let result: number[];
     if (this._checkColumns(board).length !== 0) {

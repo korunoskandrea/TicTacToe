@@ -1,0 +1,21 @@
+<h2>Game Results</h2>
+<div *ngIf="resultsService.results.length > 0" class="result-list">
+  <div class="table-container mat-elevation-z8">
+    <table class="result-table ">
+      <div class="result" *ngFor="let result of resultsService.results">
+        <p *ngIf="result.resultType !== GameResultType.TIE" [ngStyle]="{ color: '#094044' }">
+          Winner: {{ result.playerType | playerType }} as
+          sign: {{ result.sign }}
+        </p>
+        <p *ngIf="result.resultType === GameResultType.TIE">Game was tied</p>
+        <mat-divider></mat-divider>
+      </div>
+    </table>
+  </div>
+  <div class="btn-wrapper">
+    <button class="mat-elevation-z5" mat-button (click)="onBackClicked()">Game</button>
+  </div>
+</div>
+<div *ngIf="resultsService.results.length === 0">
+  <p>No game results found.</p>
+</div>

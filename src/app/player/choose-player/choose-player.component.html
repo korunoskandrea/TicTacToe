@@ -1,9 +1,10 @@
-
 <div class="container">
-<img src="tic-tac-toe.ico" alt="TicTacToe">
+  <img src="tic-tac-toe.ico" alt="TicTacToe">
   <h1>Choose Your Player Sign</h1>
   <div class="button-container">
     <button class="mat-elevation-z5" mat-button (click)="chooseSign(PlayerSign.X)">X</button>
     <button class="mat-elevation-z5" mat-button (click)="chooseSign(PlayerSign.O)">O</button>
   </div>
+  <button class="diff mat-elevation-z5" mat-button (click)="setDifficulty(Difficulty.EASY)">Set Difficulty</button>
+
 </div>
