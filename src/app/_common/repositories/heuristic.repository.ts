@@ -1,44 +1,102 @@
-import {BoardService} from "../../board/board.service";
-import {Player} from "../../player/results/Player";
-import {PlayerSign} from "../../player/utils/PlayerSign";
+import { PlayerSign } from '../../player/utils/PlayerSign';
+import { WinConditionRepository } from './win-condition.repository';
 
 export abstract class HeuristicRepository {
+  public static getGameStateHeuristic(
+    board: (PlayerSign | null)[],
+    maxPlayer: PlayerSign,
+    minPlayer: PlayerSign,
+  ) {
+    let winPositions = WinConditionRepository.winningPositions(board);
 
-  private static _getPlayerHeuristic(board: (PlayerSign | null)[], playerSign: PlayerSign) {
-    let availableColumns = 0;
+    if (winPositions.length !== 0) {
+      return board[winPositions[0]] === maxPlayer ? 100 : -100;
+    }
 
+    if (WinConditionRepository.isTied(board)) return 0;
+
+    return (
+      this._getPlayerHeuristic(board, maxPlayer) -
+      this._getPlayerHeuristic(board, minPlayer)
+    );
   }
 
-  private static _isPositionContainingPlayer(board: (PlayerSign | null)[], playerSign: PlayerSign) {
-    for (let i: number = 0; i < board.length; i++) {
-      if (board[i] === playerSign) {
-        return true;
+  private static _getPlayerHeuristic(
+    board: (PlayerSign | null)[],
+    playerSign: PlayerSign,
+  ) {
+    return (
+      this._getAvailableColumns(board, playerSign) +
+      this._getAvailableRows(board, playerSign) +
+      this._getAvailableDiagonal(board, playerSign)
+    );
+  }
+
+  private static _getAvailableColumns(
+    board: (PlayerSign | null)[],
+    playerSign: PlayerSign,
+  ): number {
+    const COLUMN_INDICES = [
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+    ];
+    let availableColumns = 3;
+
+    for (let column of COLUMN_INDICES) {
+      for (let colIndex of column) {
+        if (board[colIndex] !== null && board[colIndex] !== playerSign) {
+          availableColumns--;
+          break;
+        }
       }
     }
-    return false;
+    return availableColumns;
   }
 
-  public static getColumn(board: (PlayerSign | null)[], columnIndex: number): (PlayerSign | null)[] {
-    let column: (PlayerSign | null)[] = [];
-    for (let i: number = columnIndex; i < board.length; i += 3) {
-      column.push(board[i]);
+  private static _getAvailableRows(
+    board: (PlayerSign | null)[],
+    playerSign: PlayerSign,
+  ): number {
+    const ROWS_INDICES = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+    ];
+    let availableRows = 3;
+
+    for (let row of ROWS_INDICES) {
+      for (let rowIndex of row) {
+        if (board[rowIndex] !== null && board[rowIndex] !== playerSign) {
+          availableRows--;
+          break;
+        }
+      }
     }
-    return column;
+    return availableRows;
   }
 
-  public static getLeftDiagonal(board: (PlayerSign | null)[]): (PlayerSign | null)[] {
-    let diagonal: (PlayerSign | null)[] = [];
-    diagonal.push(board[0]);
-    diagonal.push(board[4]);
-    diagonal.push(board[8]);
-    return diagonal;
-  }
+  private static _getAvailableDiagonal(
+    board: (PlayerSign | null)[],
+    playerSign: PlayerSign,
+  ): number {
+    const DIAGONALS_INDICES = [
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    let availableDiagonals = 2;
 
-  public static getRightDiagonal(board: (PlayerSign | null)[]): (PlayerSign | null)[] {
-    let diagonal: (PlayerSign | null)[] = [];
-    diagonal.push(board[2]);
-    diagonal.push(board[4]);
-    diagonal.push(board[6]);
-    return diagonal;
+    for (let diagonal of DIAGONALS_INDICES) {
+      for (let diagonalIndex of diagonal) {
+        if (
+          board[diagonalIndex] !== null &&
+          board[diagonalIndex] !== playerSign
+        ) {
+          availableDiagonals--;
+          break;
+        }
+      }
+    }
+    return availableDiagonals;
   }
 }

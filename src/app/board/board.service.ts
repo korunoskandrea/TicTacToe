@@ -3,6 +3,8 @@ import { PlayerSign } from '../player/utils/PlayerSign';
 import { PlayerService } from '../player/player.service';
 import { WinConditionRepository } from '../_common/repositories/win-condition.repository';
 import { Observable, Subject } from 'rxjs';
+import { AlgorithmRepository } from '../_common/repositories/algoritham.repository';
+import { DifficultyService } from '../dialogs/sett-difficulty/difficulty.service';
 
 @Injectable({ providedIn: 'root' })
 export class BoardService {
@@ -17,7 +19,10 @@ export class BoardService {
     (PlayerSign | null)[]
   >();
 
-  constructor(private _playerService: PlayerService) {}
+  constructor(
+    private _playerService: PlayerService,
+    private _difficultyService: DifficultyService,
+  ) {}
 
   startTimer(): void {
     this._time = 0;
@@ -65,9 +70,7 @@ export class BoardService {
   }
 
   get isTied() {
-    if (WinConditionRepository.winningPositions(this._board).length !== 0)
-      return false;
-    return this._board.findIndex((value) => value === null) < 0;
+    return WinConditionRepository.isTied(this._board);
   }
 
   get winningPositions(): number[] {
@@ -87,13 +90,49 @@ export class BoardService {
 
   onSquareSelected(index: number, onGameOverCb: () => void) {
     if (this.isGameOver() || !this.isSquareEmpty(index)) return;
-    this._board[index] = this._playerService.currentPlayer!.sign;
-    this._boardChangeNotifier.next(this.board);
+
+    if (
+      this._playerService.currentPlayer!.sign ===
+      this._playerService.humanPlayerSign
+    ) {
+      this._board[index] = this._playerService.currentPlayer!.sign;
+      this._boardChangeNotifier.next(this.board);
+      this._playerService.nextPlayer();
+      this.preformComputerMove();
+      this._playerService.nextPlayer();
+    }
+
     if (this.isGameOver()) {
       this.stopTimer();
       onGameOverCb();
       return;
     }
-    this._playerService.nextPlayer();
+  }
+
+  preformComputerMove() {
+    const possibleBoards = AlgorithmRepository.getPossibleBoards(
+      this._board,
+      this._playerService.computerPlayerSign,
+    );
+    let bestBoardIndex = 0;
+    let bestValue = -10000;
+    possibleBoards.forEach((board, index) => {
+      const boardValue = AlgorithmRepository.minMaxAlfaBeta(
+        board,
+        this._difficultyService.difficultyDepth,
+        this._playerService.computerPlayerSign,
+        this._playerService.humanPlayerSign,
+        this._playerService.humanPlayerSign,
+        -100000,
+        100000,
+      );
+      if (boardValue > bestValue) {
+        bestValue = boardValue;
+        bestBoardIndex = index;
+      }
+    });
+
+    this._board = possibleBoards[bestBoardIndex];
+    this._boardChangeNotifier.next(this.board);
   }
 }

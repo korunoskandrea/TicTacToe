@@ -1,0 +1,55 @@
+.container {
+  background: white;
+  padding-bottom: 10px;
+}
+
+mat-dialog-content, h2 {
+  color: #091d26 !important;
+}
+
+h2 {
+  text-align: center;
+}
+
+mat-dialog-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: center;
+  grid-row-gap: 10px;
+}
+
+.btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: center;
+  grid-row-gap: 10px;
+}
+
+button {
+  display: flex;
+  width: 100px;
+  height: 50px;
+  font-size: 16px;
+  transition-duration: 0.4s;
+  background-color: #124d54;
+  color: #ededed;
+  margin-left: 10px;
+}
+
+button:hover {
+  background-color: #ededed;
+  color: #124d54;
+  border: 2px solid #124d54;
+}
+
+mat-slider {
+  margin: auto;
+  display: block;
+  width: 90%;
+}
+
+.mat-mdc-slider {
+  --mdc-slider-active-track-color: green;
+  --mdc-slider-inactive-track-color: green;
+}
+

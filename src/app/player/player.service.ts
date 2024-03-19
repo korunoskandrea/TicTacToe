@@ -26,6 +26,14 @@ export class PlayerService {
     this._isHuman = !this._isHuman;
   }
 
+  get computerPlayerSign(): PlayerSign {
+    return this._computerPlayer!.sign;
+  }
+
+  get humanPlayerSign(): PlayerSign {
+    return this._humanPlayer!.sign;
+  }
+
   switchSignsForNewGame() {
     this._humanPlayer?.switchSign();
     this._computerPlayer?.switchSign();

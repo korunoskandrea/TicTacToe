@@ -5,6 +5,7 @@ import { PlayerService } from '../player.service';
 import { Difficulty } from '../utils/Difficulty';
 import { SetDifficulty } from '../../dialogs/sett-difficulty/set-difficulty';
 import { MatDialog } from '@angular/material/dialog';
+import { DifficultyService } from '../../dialogs/sett-difficulty/difficulty.service';
 
 @Component({
   selector: 'app-choose-player',
@@ -16,6 +17,7 @@ export class ChoosePlayerComponent {
     private router: Router,
     private _playerService: PlayerService,
     private _dialog: MatDialog,
+    private _difficultyService: DifficultyService,
   ) {}
 
   chooseSign(playerSign: PlayerSign): void {
@@ -28,7 +30,9 @@ export class ChoosePlayerComponent {
   }
 
   setDifficulty(difficulty: Difficulty) {
-    this._dialog.open(SetDifficulty);
+    this._dialog.open(SetDifficulty, {
+      data: this._difficultyService.difficulty,
+    });
   }
 
   // todo set difficulty save stanje

@@ -25,9 +25,11 @@ import { MatDivider } from '@angular/material/divider';
 import { ResultsComponent } from './player/results/results.component';
 import { PlayerTypePipe } from './_common/pipes/player-type.pipe';
 import { MatTable } from '@angular/material/table';
-import { MatSlider } from '@angular/material/slider';
+import { MatSlider, MatSliderThumb } from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
 import { SetDifficulty } from './dialogs/sett-difficulty/set-difficulty';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,10 @@ import { SetDifficulty } from './dialogs/sett-difficulty/set-difficulty';
     MatTable,
     MatSlider,
     FormsModule,
+    MatSliderThumb,
+    MatFormField,
+    MatSelect,
+    MatOption,
   ],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
