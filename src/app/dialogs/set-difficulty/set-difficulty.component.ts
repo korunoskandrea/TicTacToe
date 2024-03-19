@@ -5,10 +5,10 @@ import { DifficultyService } from './difficulty.service';
 
 @Component({
   selector: 'app-difficulty-dialog',
-  templateUrl: 'set-difficulty.html',
-  styleUrls: ['set-difficulty.css'],
+  templateUrl: 'set-difficulty.component.html',
+  styleUrls: ['set-difficulty.component.css'],
 })
-export class SetDifficulty {
+export class SetDifficultyComponent {
   readonly DIFFICULTIES: Difficulty[] = [
     Difficulty.SUPER_EASY,
     Difficulty.EASY,
@@ -22,7 +22,7 @@ export class SetDifficulty {
   ];
 
   constructor(
-    public dialogRef: MatDialogRef<SetDifficulty>,
+    public dialogRef: MatDialogRef<SetDifficultyComponent>,
     public difficultyService: DifficultyService,
     @Inject(MAT_DIALOG_DATA) public data: number,
   ) {

@@ -8,6 +8,7 @@ export class PlayerService {
   private _humanPlayer: Player | null = null;
   private _computerPlayer: Player | null = null;
   private _isHuman: boolean = true;
+  private _humanStared: boolean = true;
 
   get currentPlayer(): Player | null {
     if (this._isHuman) return this._humanPlayer;
@@ -37,6 +38,7 @@ export class PlayerService {
   switchSignsForNewGame() {
     this._humanPlayer?.switchSign();
     this._computerPlayer?.switchSign();
-    this._isHuman = true;
+    this._humanStared = !this._humanStared;
+    this._isHuman = this._humanStared;
   }
 }

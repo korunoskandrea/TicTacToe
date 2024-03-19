@@ -3,7 +3,7 @@ import { PlayerSign } from '../player/utils/PlayerSign';
 import { PlayerService } from '../player/player.service';
 import { GameOverDialog } from '../dialogs/game-over/game-over.dialog';
 import { MatDialog } from '@angular/material/dialog';
-import { GameResultType, Player } from '../player/results/Player';
+import { GameResultType, Player, PlayerType } from '../player/results/Player';
 import { BoardService } from './board.service';
 import { Subscription } from 'rxjs';
 import { ResultsService } from '../player/results/results.service';
@@ -67,7 +67,10 @@ export class BoardComponent implements OnInit, OnDestroy {
       this._resultService.addResult({
         resultType: GameResultType.WIN,
         sign: this._boardService.winner,
-        playerType: this._playerService.currentPlayer!.type,
+        playerType:
+          this._boardService.winner === this._playerService.humanPlayerSign
+            ? PlayerType.HUMAN
+            : PlayerType.COMPUTER,
       });
       const dialogRef = this._dialog.open(GameOverDialog, {
         width: '500px',
@@ -103,7 +106,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   onChooseSignClicked() {
-    this._boardService.resetBoard();
+    this._boardService.startNewGame();
     return this._router.navigate(['choose-player']);
   }
 

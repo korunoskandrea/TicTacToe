@@ -4,14 +4,14 @@ import { PlayerService } from '../player/player.service';
 import { WinConditionRepository } from '../_common/repositories/win-condition.repository';
 import { Observable, Subject } from 'rxjs';
 import { AlgorithmRepository } from '../_common/repositories/algoritham.repository';
-import { DifficultyService } from '../dialogs/sett-difficulty/difficulty.service';
+import { DifficultyService } from '../dialogs/set-difficulty/difficulty.service';
 
 @Injectable({ providedIn: 'root' })
 export class BoardService {
   readonly WIDTH: number = 3;
   readonly HEIGHT: number = 3;
-  timerInterval: any;
   private _time: number = 0;
+  private timerInterval: any;
   private _board: (PlayerSign | null)[] = Array(this.WIDTH * this.HEIGHT).fill(
     null,
   );
@@ -81,9 +81,17 @@ export class BoardService {
     return this._boardChangeNotifier.asObservable();
   }
 
-  resetBoard() {
+  startNewGame() {
+    this.startTimer();
+    this._playerService.switchSignsForNewGame();
     for (let i = 0; i < this._board.length; i++) {
       this._board[i] = null;
+    }
+    if (
+      this._playerService.currentPlayer?.sign ===
+      this._playerService.computerPlayerSign
+    ) {
+      this.preformComputerMove();
     }
     this._boardChangeNotifier.next(this.board);
   }
@@ -97,9 +105,13 @@ export class BoardService {
     ) {
       this._board[index] = this._playerService.currentPlayer!.sign;
       this._boardChangeNotifier.next(this.board);
+      if (this.isGameOver()) {
+        this.stopTimer();
+        onGameOverCb();
+        return;
+      }
       this._playerService.nextPlayer();
       this.preformComputerMove();
-      this._playerService.nextPlayer();
     }
 
     if (this.isGameOver()) {
@@ -119,7 +131,7 @@ export class BoardService {
     possibleBoards.forEach((board, index) => {
       const boardValue = AlgorithmRepository.minMaxAlfaBeta(
         board,
-        this._difficultyService.difficultyDepth,
+        this._difficultyService.difficultyDepth - 1,
         this._playerService.computerPlayerSign,
         this._playerService.humanPlayerSign,
         this._playerService.humanPlayerSign,
@@ -131,8 +143,15 @@ export class BoardService {
         bestBoardIndex = index;
       }
     });
-
-    this._board = possibleBoards[bestBoardIndex];
+    // this._board = [...possibleBoards[bestBoardIndex]];
+    this.updateBoard(possibleBoards[bestBoardIndex]); // some errors fixed
     this._boardChangeNotifier.next(this.board);
+    this._playerService.nextPlayer();
+  }
+
+  updateBoard(newBoard: (PlayerSign | null)[]) {
+    if (Array.isArray(newBoard)) {
+      this._board = [...newBoard];
+    }
   }
 }

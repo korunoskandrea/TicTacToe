@@ -6,6 +6,7 @@ type Board = (PlayerSign | null)[];
 
 export abstract class AlgorithmRepository {
   public static minMax(
+    // minMax Algorithm
     board: Board,
     depth: number,
     maxPlayerSign: PlayerSign,
@@ -25,7 +26,7 @@ export abstract class AlgorithmRepository {
     }
     if (currentPlayer === maxPlayerSign) {
       let value: number = -10000000;
-      for (let possibleBoard of this.getPossibleBoards(board, currentPlayer)) {
+      for (let possibleBoard of this.getPossibleBoards(board, maxPlayerSign)) {
         value = Math.max(
           value,
           this.minMax(
@@ -40,7 +41,7 @@ export abstract class AlgorithmRepository {
       return value;
     } else {
       let value: number = 10000000;
-      for (let possibleBoard of this.getPossibleBoards(board, currentPlayer)) {
+      for (let possibleBoard of this.getPossibleBoards(board, minPlayerSign)) {
         value = Math.min(
           value,
           this.minMax(
@@ -93,7 +94,7 @@ export abstract class AlgorithmRepository {
     }
     if (currentPlayer === maxPlayerSign) {
       let value: number = -1000000;
-      for (let possibleBoard of this.getPossibleBoards(board, currentPlayer)) {
+      for (let possibleBoard of this.getPossibleBoards(board, maxPlayerSign)) {
         value = Math.max(
           value,
           this.minMaxAlfaBeta(
@@ -114,7 +115,7 @@ export abstract class AlgorithmRepository {
       return value;
     } else {
       let value: number = 1000000;
-      for (let possibleBoard of this.getPossibleBoards(board, currentPlayer)) {
+      for (let possibleBoard of this.getPossibleBoards(board, minPlayerSign)) {
         value = Math.min(
           value,
           this.minMaxAlfaBeta(

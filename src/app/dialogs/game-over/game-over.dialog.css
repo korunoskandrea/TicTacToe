@@ -4,14 +4,14 @@
 }
 
 mat-dialog-content, h2 {
-  color: #091d26  !important;
+  color: #091d26 !important;
 }
 
 h2 {
   text-align: center;
 }
 
-mat-dialog-content{
+mat-dialog-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   text-align: center;
@@ -23,6 +23,10 @@ mat-dialog-content{
   grid-template-columns: 1fr 1fr;
   text-align: center;
   grid-row-gap: 10px;
+}
+
+.start-new-game-btn {
+  margin-left: 140px;
 }
 
 p, h3 {

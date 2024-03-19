@@ -4,7 +4,7 @@
     <table class="result-table ">
       <div class="result" *ngFor="let result of resultsService.results">
         <p *ngIf="result.resultType !== GameResultType.TIE" [ngStyle]="{ color: '#094044' }">
-          Winner: {{ result.playerType | playerType }} as
+          Winner: <strong>{{ result.playerType | playerType }}</strong> as
           sign: {{ result.sign }}
         </p>
         <p *ngIf="result.resultType === GameResultType.TIE">Game was tied</p>

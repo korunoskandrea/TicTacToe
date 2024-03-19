@@ -27,7 +27,7 @@ import { PlayerTypePipe } from './_common/pipes/player-type.pipe';
 import { MatTable } from '@angular/material/table';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
-import { SetDifficulty } from './dialogs/sett-difficulty/set-difficulty';
+import { SetDifficultyComponent } from './dialogs/set-difficulty/set-difficulty.component';
 import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 
@@ -39,7 +39,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
     GameOverDialog,
     ChoosePlayerComponent,
     ResultsComponent,
-    SetDifficulty,
+    SetDifficultyComponent,
   ],
   imports: [
     BrowserModule,

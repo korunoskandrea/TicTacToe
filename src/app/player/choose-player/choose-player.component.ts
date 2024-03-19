@@ -3,9 +3,9 @@ import { PlayerSign } from '../utils/PlayerSign';
 import { Router } from '@angular/router';
 import { PlayerService } from '../player.service';
 import { Difficulty } from '../utils/Difficulty';
-import { SetDifficulty } from '../../dialogs/sett-difficulty/set-difficulty';
+import { SetDifficultyComponent } from '../../dialogs/set-difficulty/set-difficulty.component';
 import { MatDialog } from '@angular/material/dialog';
-import { DifficultyService } from '../../dialogs/sett-difficulty/difficulty.service';
+import { DifficultyService } from '../../dialogs/set-difficulty/difficulty.service';
 
 @Component({
   selector: 'app-choose-player',
@@ -29,13 +29,18 @@ export class ChoosePlayerComponent {
     }
   }
 
-  setDifficulty(difficulty: Difficulty) {
-    this._dialog.open(SetDifficulty, {
-      data: this._difficultyService.difficulty,
+  setDifficulty(
+    difficulty: Difficulty,
+    enterAnimationDuration: string,
+    exitAnimationDuration: string,
+  ): void {
+    this._dialog.open(SetDifficultyComponent, {
+      data: this._difficultyService.difficultyDepth,
+      disableClose: true,
+      enterAnimationDuration,
+      exitAnimationDuration,
     });
   }
-
-  // todo set difficulty save stanje
 
   protected readonly PlayerSign = PlayerSign;
   protected readonly Difficulty = Difficulty;

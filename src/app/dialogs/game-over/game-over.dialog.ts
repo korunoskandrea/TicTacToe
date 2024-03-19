@@ -23,9 +23,7 @@ export class GameOverDialog {
   ) {}
 
   onNewGameClicked() {
-    this._boardService.startTimer();
-    this._playerService.switchSignsForNewGame();
-    this._boardService.resetBoard();
+    this._boardService.startNewGame();
     this.dialogRef.close();
   }
 

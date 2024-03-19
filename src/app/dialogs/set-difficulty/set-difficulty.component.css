@@ -1,13 +1,17 @@
 .container {
+  position: relative;
   background: white;
-  padding-bottom: 10px;
+  padding-bottom: 60px;
+  width: 400px;
+  height: 200px;
 }
 
-mat-dialog-content, h2 {
+mat-dialog-content,
+h2 {
   color: #091d26 !important;
 }
 
-h2 {
+h2, h4 {
   text-align: center;
 }
 
@@ -19,21 +23,21 @@ mat-dialog-content {
 }
 
 .btns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  text-align: center;
-  grid-row-gap: 10px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 20px;
 }
 
 button {
-  display: flex;
   width: 100px;
   height: 50px;
   font-size: 16px;
   transition-duration: 0.4s;
   background-color: #124d54;
   color: #ededed;
-  margin-left: 10px;
+  margin: 0 5px;
 }
 
 button:hover {
@@ -43,13 +47,14 @@ button:hover {
 }
 
 mat-slider {
-  margin: auto;
+  margin: 30px auto 30px;
   display: block;
-  width: 90%;
+  width: 80%;
 }
 
 .mat-mdc-slider {
-  --mdc-slider-active-track-color: green;
-  --mdc-slider-inactive-track-color: green;
+  --mdc-slider-active-track-color: #124d54;
+  --mdc-slider-inactive-track-color: #d84f2a;
 }
+
 
