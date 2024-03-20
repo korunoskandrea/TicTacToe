@@ -10,12 +10,13 @@ export abstract class HeuristicRepository {
     let winPositions = WinConditionRepository.winningPositions(board);
 
     if (winPositions.length !== 0) {
-      return board[winPositions[0]] === maxPlayer ? 100 : -100;
+      return board[winPositions[0]] === maxPlayer ? 100 : -100; // exp. 100 -> maxPlayer is winner
     }
 
     if (WinConditionRepository.isTied(board)) return 0;
 
     return (
+      // difference between the heuristic values of the max and min players
       this._getPlayerHeuristic(board, maxPlayer) -
       this._getPlayerHeuristic(board, minPlayer)
     );
@@ -43,6 +44,7 @@ export abstract class HeuristicRepository {
     ];
     let availableColumns = 3;
 
+    // checking each column for availability
     for (let column of COLUMN_INDICES) {
       for (let colIndex of column) {
         if (board[colIndex] !== null && board[colIndex] !== playerSign) {
@@ -65,6 +67,7 @@ export abstract class HeuristicRepository {
     ];
     let availableRows = 3;
 
+    // Checking each row for availability
     for (let row of ROWS_INDICES) {
       for (let rowIndex of row) {
         if (board[rowIndex] !== null && board[rowIndex] !== playerSign) {
@@ -86,6 +89,7 @@ export abstract class HeuristicRepository {
     ];
     let availableDiagonals = 2;
 
+    // Checking each diagonal for availability
     for (let diagonal of DIAGONALS_INDICES) {
       for (let diagonalIndex of diagonal) {
         if (
